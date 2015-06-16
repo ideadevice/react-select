@@ -335,7 +335,7 @@ var Select = React.createClass({
 		if (this.props.disabled || (event.type === 'mousedown' && event.button !== 0)) {
 			return;
 		}
-		// If not focused, handleMouseDown will handle it 
+		// If not focused, handleMouseDown will handle it
 		if (!this.state.isOpen) {
 			return;
 		}
@@ -679,7 +679,14 @@ var Select = React.createClass({
 			if (op.disabled) {
 				return <div ref={ref} key={'option-' + op.value} className={optionClass}>{op.label}</div>;
 			} else {
-				return <div ref={ref} key={'option-' + op.value} className={optionClass} onMouseEnter={mouseEnter} onMouseLeave={mouseLeave} onMouseDown={mouseDown} onClick={mouseDown}>{ op.create ? 'Add ' + op.label + ' ?' : op.label}</div>;
+				return <div ref={ref} key={'option-' + op.value}
+					className={optionClass}
+					onMouseEnter={mouseEnter}
+					onMouseLeave={mouseLeave}
+					onMouseDown={mouseDown}
+					onClick={mouseDown}>
+						{op.label}
+					</div>;
 			}
 		}, this);
 
