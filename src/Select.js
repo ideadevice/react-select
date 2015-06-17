@@ -358,7 +358,6 @@ var Select = React.createClass({
 	handleInputFocus: function(event) {
 		var newIsOpen = this.state.isOpen || this._openAfterFocus;
 		this.setState({
-			inputValue: this.state.value,
 			isFocused: true,
 			isOpen: newIsOpen
 		}, function() {
