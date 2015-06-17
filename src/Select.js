@@ -469,6 +469,7 @@ var Select = React.createClass({
 			}, this._bindCloseMenuIfClickedOutside);
 		} else {
 			var filteredOptions = this.filterOptions(this.state.options);
+			this.props.allowCreate && this.selectValue(this._optionsFilterString, true);
 			this.setState({
 				isOpen: true,
 				inputValue: event.target.value,
