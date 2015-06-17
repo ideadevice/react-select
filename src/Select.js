@@ -350,6 +350,7 @@ var Select = React.createClass({
 	handleInputFocus: function(event) {
 		var newIsOpen = this.state.isOpen || this._openAfterFocus;
 		this.setState({
+			inputValue: this.state.value,
 			isFocused: true,
 			isOpen: newIsOpen
 		}, function() {
@@ -611,11 +612,15 @@ var Select = React.createClass({
 
 		var focusedIndex = -1;
 
-		for (var i = 0; i < ops.length; i++) {
-			if (this.state.focusedOption === ops[i]) {
-				focusedIndex = i;
-				break;
+		if (!this.state.focusedOption.create) {
+			for (var i = 0; i < ops.length; i++) {
+				if (this.state.focusedOption === ops[i]) {
+					focusedIndex = i;
+					break;
+				}
 			}
+		} else {
+			focusedIndex = 0;
 		}
 
 		var focusedOption = ops[0];
@@ -652,12 +657,29 @@ var Select = React.createClass({
 		}
 		// Add the current value to the filtered options in last resort
 		if (this.props.allowCreate && this.state.inputValue.trim()) {
-			var inputValue = this.state.inputValue;
-			this.state.filteredOptions.unshift({
-				value: inputValue,
-				label: inputValue,
-				create: true
+			var inputValue = this.state.inputValue,
+				createValue = {
+					value: inputValue,
+					label: inputValue,
+					create: true
+				},
+				indexOfCreate = -1;
+
+			this.state.filteredOptions.some(function(o, i) {
+				if (o.create) {
+					indexOfCreate = i;
+					return true;
+				}
 			});
+			if (indexOfCreate >= 0) {
+				this.state.filteredOptions[indexOfCreate] = createValue;
+			} else {
+				this.state.filteredOptions.unshift({
+					value: inputValue,
+					label: inputValue,
+					create: true
+				});
+			}
 		}
 
 		var ops = Object.keys(this.state.filteredOptions).map(function(key) {
@@ -735,7 +757,7 @@ var Select = React.createClass({
 			}, this);
 		}
 
-		if (this.props.disabled || (!this.state.inputValue && (!this.props.multi || !value.length))) {
+		if (!this.props.isFocused && (this.props.disabled || (!this.state.inputValue && (!this.props.multi || !value.length)))) {
 			value.push(<div className="Select-placeholder" key="placeholder">{this.state.placeholder}</div>);
 		}
 
