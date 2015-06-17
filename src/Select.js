@@ -213,7 +213,15 @@ var Select = React.createClass({
 		}
 
 		// reset internal filter string
-		this._optionsFilterString = '';
+		if (this.props.allowCreate && value && typeof value === 'string') {
+			if (options && options.filter(function(o) {return o.value === value}).length > 0) {
+				this._optionsFilterString = '';
+			} else {
+				this._optionsFilterString = value;
+			}
+		} else {
+			this._optionsFilterString = '';
+		}
 
 		var values = this.initValuesArray(value, options),
 			filteredOptions = this.filterOptions(options, values);
@@ -221,7 +229,7 @@ var Select = React.createClass({
 		return {
 			value: values.map(function(v) { return v.value; }).join(this.props.delimiter),
 			values: values,
-			inputValue: '',
+			inputValue: this._optionsFilterString,
 			filteredOptions: filteredOptions,
 			placeholder: !this.props.multi && values.length ? values[0].label : this.props.placeholder,
 			focusedOption: !this.props.multi && values.length ? values[0] : filteredOptions[0]
@@ -425,13 +433,8 @@ var Select = React.createClass({
 			break;
 
 			case 188: // ,
-				if (this.props.allowCreate) {
-					event.preventDefault();
-					event.stopPropagation();
-					this.selectFocusedOption();
-				} else {
-					return;
-				}
+				return;
+				break;
 			break;
 
 			default: return;
@@ -612,15 +615,11 @@ var Select = React.createClass({
 
 		var focusedIndex = -1;
 
-		if (!this.state.focusedOption.create) {
-			for (var i = 0; i < ops.length; i++) {
-				if (this.state.focusedOption === ops[i]) {
-					focusedIndex = i;
-					break;
-				}
+		for (var i = 0; i < ops.length; i++) {
+			if (this.state.focusedOption === ops[i]) {
+				focusedIndex = i;
+				break;
 			}
-		} else {
-			focusedIndex = 0;
 		}
 
 		var focusedOption = ops[0];
@@ -654,32 +653,6 @@ var Select = React.createClass({
 
 		if(this.state.filteredOptions.length > 0) {
 			focusedValue = focusedValue == null ? this.state.filteredOptions[0] : focusedValue;
-		}
-		// Add the current value to the filtered options in last resort
-		if (this.props.allowCreate && this.state.inputValue.trim()) {
-			var inputValue = this.state.inputValue,
-				createValue = {
-					value: inputValue,
-					label: inputValue,
-					create: true
-				},
-				indexOfCreate = -1;
-
-			this.state.filteredOptions.some(function(o, i) {
-				if (o.create) {
-					indexOfCreate = i;
-					return true;
-				}
-			});
-			if (indexOfCreate >= 0) {
-				this.state.filteredOptions[indexOfCreate] = createValue;
-			} else {
-				this.state.filteredOptions.unshift({
-					value: inputValue,
-					label: inputValue,
-					create: true
-				});
-			}
 		}
 
 		var ops = Object.keys(this.state.filteredOptions).map(function(key) {
