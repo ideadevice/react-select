@@ -213,12 +213,15 @@ var Select = React.createClass({
 		}
 
 		// reset internal filter string
-		if (this.props.allowCreate && value && typeof value === 'string') {
-			if (options && options.filter(function(o) {return o.value === value}).length > 0) {
-				this._optionsFilterString = '';
+		if (value && typeof value === 'string') {
+			var selOpt = options && options.filter(function(o) {return o.value === value});
+			if (selOpt.length) {
+				this._optionsFilterString = selOpt[0].label;
 			} else {
 				this._optionsFilterString = value;
 			}
+		} else if (value && value.label) {
+			this._optionsFilterString = value.label;
 		} else {
 			this._optionsFilterString = '';
 		}
@@ -229,7 +232,7 @@ var Select = React.createClass({
 		return {
 			value: values.map(function(v) { return v.value; }).join(this.props.delimiter),
 			values: values,
-			inputValue: this._optionsFilterString,
+			inputValue: '',
 			filteredOptions: filteredOptions,
 			placeholder: !this.props.multi && values.length ? values[0].label : this.props.placeholder,
 			focusedOption: !this.props.multi && values.length ? values[0] : filteredOptions[0]
@@ -397,7 +400,7 @@ var Select = React.createClass({
 		switch (event.keyCode) {
 
 			case 8: // backspace
-				if (!this.state.inputValue) {
+				if (!event.target.value) {
 					this.popValue();
 				}
 			return;
@@ -727,7 +730,8 @@ var Select = React.createClass({
 			}, this);
 		}
 
-		if (!this.props.isFocused && (this.props.disabled || (!this.state.inputValue && (!this.props.multi || !value.length)))) {
+		if (this.props.disabled || (this.props.multi && !value.length && !this.state.isFocused) ||
+				!this.props.searchable || (!this.props.multi && !this.state.isFocused)) {
 			value.push(<div className="Select-placeholder" key="placeholder">{this.state.placeholder}</div>);
 		}
 
@@ -766,7 +770,8 @@ var Select = React.createClass({
 		}
 
 		if (this.props.searchable && !this.props.disabled) {
-			input = <Input value={this.state.inputValue} onChange={this.handleInputChange} minWidth="5" {...inputProps} />;
+			var inputValue = this.state.isFocused ? this._optionsFilterString : this.state.inputValue;
+			input = <Input value={inputValue} onChange={this.handleInputChange} minWidth="5" {...inputProps} />;
 		} else {
 			input = <div {...inputProps}>&nbsp;</div>;
 		}

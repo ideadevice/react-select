@@ -189,6 +189,34 @@ var SelectedValuesFieldCreate = React.createClass({
 					value="chocolate,vanilla,strawberry"
 					delimiter=","
 					multi={true}
+					placeholder="Select your favourite(s)"
+					options={ops}
+					onChange={logChange} />
+			</div>
+		);
+	}
+});
+
+var AllowCreate = React.createClass({
+
+	onLabelClick: function (data, event) {
+		console.log(data, event);
+	},
+
+	render: function() {
+		var ops = [
+			{ label: 'Chocolate', value: 'chocolate' },
+			{ label: 'Vanilla', value: 'vanilla' },
+			{ label: 'Strawberry', value: 'strawberry' },
+			{ label: 'Caramel', value: 'caramel' },
+			{ label: 'Cookies and Cream', value: 'cookiescream' },
+			{ label: 'Peppermint', value: 'peppermint' }
+		];
+		return (
+			<div>
+				<label>{this.props.label}</label>
+				<Select
+					value="chocolate"
 					allowCreate={true}
 					placeholder="Select your favourite(s)"
 					options={ops}
@@ -203,11 +231,6 @@ var SelectedValuesFieldCreate = React.createClass({
 React.render(
 	<div>
 		<StatesField />
-		<StatesField label="States (non-searchable):" searchable={false} />
-		<MultiSelectField label="Multiselect:"/>
-		<SelectedValuesField label="Clickable labels (labels as links):" />
-		<SelectedValuesFieldCreate label="Clickable labels + Creation(labels as links):" />
-		<RemoteSelectField label="Remote Options:"/>
 	</div>,
 	document.getElementById('example')
 );
