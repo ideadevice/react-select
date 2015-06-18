@@ -809,10 +809,10 @@ var Select = React.createClass({
 				{ className: 'Select-control', ref: 'control', onKeyDown: this.handleKeyDown, onMouseDown: this.handleMouseDown, onTouchEnd: this.handleMouseDown },
 				value,
 				input,
-				React.createElement('span', { className: 'Select-arrow-zone', onMouseDown: this.handleMouseDownOnArrow }),
-				React.createElement('span', { className: 'Select-arrow', onMouseDown: this.handleMouseDownOnArrow }),
+				!this.state.isFocused ? React.createElement('span', { className: 'Select-arrow-zone', onMouseDown: this.handleMouseDownOnArrow }) : null,
+				!this.state.isFocused ? React.createElement('span', { className: 'Select-arrow', onMouseDown: this.handleMouseDownOnArrow }) : null,
 				loading,
-				clear
+				!this.state.isFocused ? clear : null
 			),
 			menu
 		);

@@ -782,10 +782,10 @@ var Select = React.createClass({
 				<div className="Select-control" ref="control" onKeyDown={this.handleKeyDown} onMouseDown={this.handleMouseDown} onTouchEnd={this.handleMouseDown}>
 					{value}
 					{input}
-					<span className="Select-arrow-zone" onMouseDown={this.handleMouseDownOnArrow} />
-					<span className="Select-arrow" onMouseDown={this.handleMouseDownOnArrow} />
+					{!this.state.isFocused ? <span className="Select-arrow-zone" onMouseDown={this.handleMouseDownOnArrow} /> : null}
+					{!this.state.isFocused ? <span className="Select-arrow" onMouseDown={this.handleMouseDownOnArrow} /> : null}
 					{loading}
-					{clear}
+					{!this.state.isFocused ? clear : null}
 				</div>
 				{menu}
 			</div>
