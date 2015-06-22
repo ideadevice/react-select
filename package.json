@@ -1,5 +1,5 @@
 {
-  "name": "react-select",
+  "name": "styx-select",
   "version": "0.4.9",
   "description": "A Select control built with and for ReactJS",
   "main": "lib/Select.js",
@@ -7,7 +7,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/JedWatson/react-select.git"
+    "url": "https://github.com/ideadevice/react-select.git"
   },
   "dependencies": {
     "classnames": "^2.1.2",
